@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Xcode: configurações locais e resultados de build
+DerivedData/
+build/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# Arquivos de assinatura e pacotes gerados
+*.cer
+*.p12
+*.provisionprofile
+*.dSYM
+*.dSYM.zip
+*.app.zip
+*.ipa
+*.dmg
+*.pkg
+
+# Configurações locais e segredos
+.env
+.env.*
+!.env.example

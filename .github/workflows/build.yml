@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Build MenuHelp
+        run: |
+          xcodebuild \
+            -project MenuHelp.xcodeproj \
+            -target MenuHelp \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            build
