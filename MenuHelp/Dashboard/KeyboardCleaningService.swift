@@ -13,6 +13,13 @@ class KeyboardCleaningService: ObservableObject {
     private var runLoopSource: CFRunLoopSource?
     private var countdownTimer: Timer?
     private let cleaningDuration = 30
+    private static let enabledDefaultsKey = "keyboardCleaningEnabled"
+
+    init() {
+        if UserDefaults.standard.bool(forKey: Self.enabledDefaultsKey) {
+            setEnabled(true)
+        }
+    }
 
     func setEnabled(_ enabled: Bool) {
         if enabled {
@@ -34,7 +41,7 @@ class KeyboardCleaningService: ObservableObject {
         let options = [promptKey: true] as CFDictionary
 
         guard AXIsProcessTrustedWithOptions(options) else {
-            errorMessage = "Permita o MenuHelp em Privacidade e Segurança → Acessibilidade."
+            errorMessage = String(localized: "Permita o MenuHelp em Privacidade e Segurança → Acessibilidade.")
             return
         }
 
@@ -52,7 +59,7 @@ class KeyboardCleaningService: ObservableObject {
             callback: keyboardCleaningEventCallback,
             userInfo: nil
         ) else {
-            errorMessage = "Não foi possível bloquear o teclado. Verifique a permissão de Acessibilidade."
+            errorMessage = String(localized: "Não foi possível bloquear o teclado. Verifique a permissão de Acessibilidade.")
             return
         }
 
@@ -65,6 +72,7 @@ class KeyboardCleaningService: ObservableObject {
         isEnabled = true
         secondsRemaining = cleaningDuration
         errorMessage = nil
+        UserDefaults.standard.set(true, forKey: Self.enabledDefaultsKey)
         startCountdown()
     }
 
@@ -100,6 +108,7 @@ class KeyboardCleaningService: ObservableObject {
         runLoopSource = nil
         isEnabled = false
         secondsRemaining = 0
+        UserDefaults.standard.set(false, forKey: Self.enabledDefaultsKey)
     }
 }
 

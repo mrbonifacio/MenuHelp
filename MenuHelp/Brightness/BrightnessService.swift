@@ -119,7 +119,7 @@ class BrightnessService: ObservableObject {
         case .ddcctl(let path):
             let discovery = runCommand(path: path, arguments: [])
             guard let ddcDisplayCount = parseExternalDisplayCount(from: discovery.output) else {
-                errorMessage = "Não foi possível identificar os monitores conectados."
+                errorMessage = String(localized: "Não foi possível identificar os monitores conectados.")
                 return
             }
 
@@ -146,8 +146,11 @@ class BrightnessService: ObservableObject {
         if foundDisplays.count < detectedExternalDisplayCount {
             let unavailable = detectedExternalDisplayCount - foundDisplays.count
             errorMessage = unavailable == 1
-                ? "Um monitor foi detectado, mas não respondeu ao DDC/CI."
-                : "\(unavailable) monitores foram detectados, mas não responderam ao DDC/CI."
+                ? String(localized: "Um monitor foi detectado, mas não respondeu ao DDC/CI.")
+                : String(
+                    format: String(localized: "%d monitores foram detectados, mas não responderam ao DDC/CI."),
+                    unavailable
+                )
         }
     }
 
@@ -187,7 +190,7 @@ class BrightnessService: ObservableObject {
         }
 
         guard let confirmedReading else {
-            errorMessage = "Não foi possível alterar o brilho. Ative o DDC/CI no monitor e confira a conexão."
+            errorMessage = String(localized: "Não foi possível alterar o brilho. Ative o DDC/CI no monitor e confira a conexão.")
             return
         }
 
@@ -201,7 +204,10 @@ class BrightnessService: ObservableObject {
     private func makeDisplay(id: Int, reading: BrightnessReading) -> DisplayInfo {
         DisplayInfo(
             id: id,
-            name: reading.name ?? "Monitor externo \(id)",
+            name: reading.name ?? String(
+                format: String(localized: "Monitor externo %d"),
+                id
+            ),
             currentBrightness: reading.current,
             maximumBrightness: reading.maximum
         )

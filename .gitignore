@@ -4,6 +4,8 @@
 # Xcode: configurações locais e resultados de build
 DerivedData/
 build/
+.codex-build/
+dist/
 *.xcuserstate
 *.xcscmblueprint
 *.xccheckout

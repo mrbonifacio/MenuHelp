@@ -18,8 +18,8 @@ struct DashboardView: View {
 
                 VStack(spacing: 0) {
                     FeatureToggleRow(
-                        title: "Monitoramento do sistema",
-                        subtitle: "CPU, memória e disco",
+                        title: String(localized: "Monitoramento do sistema"),
+                        subtitle: String(localized: "CPU, memória e disco"),
                         isOn: Binding(
                             get: { systemMonitor.isEnabled },
                             set: { systemMonitor.setEnabled($0) }
@@ -29,10 +29,8 @@ struct DashboardView: View {
                     Divider().padding(.leading, 14)
 
                     FeatureToggleRow(
-                        title: "Histórico do Clipboard",
-                        subtitle: clipboardService.isEnabled
-                            ? "\(clipboardService.items.count) itens salvos"
-                            : "Textos e imagens não serão registrados",
+                        title: String(localized: "Histórico do Clipboard"),
+                        subtitle: clipboardSubtitle,
                         isOn: Binding(
                             get: { clipboardService.isEnabled },
                             set: { clipboardService.setEnabled($0) }
@@ -60,7 +58,7 @@ struct DashboardView: View {
                     Divider().padding(.leading, 14)
 
                     FeatureToggleRow(
-                        title: "Limpeza do teclado",
+                        title: String(localized: "Limpeza do teclado"),
                         subtitle: keyboardSubtitle,
                         isOn: Binding(
                             get: { keyboardCleaning.isEnabled },
@@ -75,8 +73,8 @@ struct DashboardView: View {
                     Divider().padding(.leading, 14)
 
                     FeatureToggleRow(
-                        title: "Prevent Sleep",
-                        subtitle: "Impede o repouso automático do Mac",
+                        title: String(localized: "Prevent Sleep"),
+                        subtitle: String(localized: "Mantém a tela ligada e impede o repouso automático"),
                         isOn: Binding(
                             get: { preventSleep.isEnabled },
                             set: { preventSleep.setEnabled($0) }
@@ -107,9 +105,31 @@ struct DashboardView: View {
 
     private var keyboardSubtitle: String {
         if keyboardCleaning.isEnabled {
-            return "Teclado bloqueado por mais \(keyboardCleaning.secondsRemaining)s"
+            if keyboardCleaning.secondsRemaining == 1 {
+                return String(localized: "Teclado bloqueado por mais 1 segundo")
+            }
+            return String(
+                format: String(localized: "Teclado bloqueado por mais %d segundos"),
+                keyboardCleaning.secondsRemaining
+            )
         }
-        return "Bloqueia as teclas por 30 segundos"
+        return String(localized: "Bloqueia as teclas por 30 segundos")
+    }
+
+    private var clipboardSubtitle: String {
+        guard clipboardService.isEnabled else {
+            return String(localized: "Textos e imagens não serão registrados")
+        }
+
+        let itemCount = clipboardService.items.count
+        if itemCount == 1 {
+            return String(localized: "1 item salvo")
+        }
+
+        return String(
+            format: String(localized: "%d itens salvos"),
+            itemCount
+        )
     }
 }
 
@@ -120,7 +140,11 @@ private struct SystemMetricsView: View {
         HStack(spacing: 18) {
             MetricRing(title: "CPU", icon: "cpu", value: service.cpuUsage)
             MetricRing(title: "RAM", icon: "memorychip", value: service.memoryUsage)
-            MetricRing(title: "DISCO", icon: "internaldrive", value: service.diskUsage)
+            MetricRing(
+                title: String(localized: "DISCO"),
+                icon: "internaldrive",
+                value: service.diskUsage
+            )
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
@@ -169,7 +193,13 @@ private struct MetricRing: View {
                 .font(.system(size: 10, weight: .semibold))
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(title), \(Int(value * 100)) por cento")
+        .accessibilityLabel(
+            String(
+                format: String(localized: "%@, %d por cento"),
+                title,
+                Int(value * 100)
+            )
+        )
     }
 }
 

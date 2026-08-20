@@ -3,15 +3,82 @@ import SwiftUI
 struct PreferencesView: View {
     @StateObject private var shortcutService = ShortcutService.shared
     @StateObject private var clipboardService = ClipboardService.shared
+    @StateObject private var languageService = LanguageService.shared
+    @StateObject private var launchAtLoginService = LaunchAtLoginService.shared
     @State private var isClearHistoryConfirmationPresented = false
+    @State private var isRestartConfirmationPresented = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 preferenceHeader(
+                    icon: "power",
+                    title: String(localized: "Geral"),
+                    subtitle: String(localized: "Configure a inicialização do MenuHelp.")
+                )
+
+                VStack(spacing: 0) {
+                    Toggle(
+                        isOn: Binding(
+                            get: { launchAtLoginService.isEnabled },
+                            set: { launchAtLoginService.setEnabled($0) }
+                        )
+                    ) {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Iniciar com o Mac")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text("Abre automaticamente ao iniciar a sessão.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .toggleStyle(.switch)
+                    .padding(14)
+                }
+                .background(Color.primary.opacity(0.055))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                if let errorMessage = launchAtLoginService.errorMessage {
+                    Label(errorMessage, systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                }
+
+                preferenceHeader(
+                    icon: "globe",
+                    title: String(localized: "Idioma"),
+                    subtitle: String(localized: "Escolha o idioma usado pelo MenuHelp.")
+                )
+
+                VStack(spacing: 0) {
+                    settingPickerRow(title: String(localized: "Idioma do aplicativo")) {
+                        Picker(
+                            "Idioma do aplicativo",
+                            selection: Binding(
+                                get: { languageService.selectedLanguage },
+                                set: { language in
+                                    if languageService.setLanguage(language) {
+                                        isRestartConfirmationPresented = true
+                                    }
+                                }
+                            )
+                        ) {
+                            ForEach(AppLanguage.allCases) { language in
+                                Text(language.localizedName).tag(language)
+                            }
+                        }
+                        .labelsHidden()
+                        .frame(width: 210)
+                    }
+                }
+                .background(Color.primary.opacity(0.055))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+
+                preferenceHeader(
                     icon: "keyboard",
-                    title: "Atalhos",
-                    subtitle: "Acesse recursos do MenuHelp em qualquer aplicativo."
+                    title: String(localized: "Atalhos"),
+                    subtitle: String(localized: "Acesse recursos do MenuHelp em qualquer aplicativo.")
                 )
 
                 VStack(spacing: 0) {
@@ -66,8 +133,8 @@ struct PreferencesView: View {
 
                 preferenceHeader(
                     icon: "clipboard",
-                    title: "Histórico do Clipboard",
-                    subtitle: "Controle o armazenamento local de textos e imagens."
+                    title: String(localized: "Histórico do Clipboard"),
+                    subtitle: String(localized: "Controle o armazenamento local de textos e imagens.")
                 )
 
                 VStack(spacing: 0) {
@@ -83,7 +150,7 @@ struct PreferencesView: View {
 
                     Divider().padding(.leading, 14)
 
-                    settingPickerRow(title: "Máximo de itens") {
+                    settingPickerRow(title: String(localized: "Máximo de itens")) {
                         Picker(
                             "Máximo de itens",
                             selection: Binding(
@@ -101,7 +168,7 @@ struct PreferencesView: View {
 
                     Divider().padding(.leading, 14)
 
-                    settingPickerRow(title: "Excluir automaticamente") {
+                    settingPickerRow(title: String(localized: "Excluir automaticamente")) {
                         Picker(
                             "Excluir automaticamente",
                             selection: Binding(
@@ -152,6 +219,9 @@ struct PreferencesView: View {
             .padding(20)
         }
         .frame(width: 520, height: 590)
+        .onAppear {
+            launchAtLoginService.refreshStatus()
+        }
         .confirmationDialog(
             "Apagar todo o histórico?",
             isPresented: $isClearHistoryConfirmationPresented,
@@ -163,6 +233,18 @@ struct PreferencesView: View {
             Button("Cancelar", role: .cancel) { }
         } message: {
             Text("Essa ação remove os textos e as imagens armazenados pelo MenuHelp e não pode ser desfeita.")
+        }
+        .confirmationDialog(
+            "Reiniciar o MenuHelp?",
+            isPresented: $isRestartConfirmationPresented,
+            titleVisibility: .visible
+        ) {
+            Button("Reiniciar agora") {
+                languageService.restartApplication()
+            }
+            Button("Mais tarde", role: .cancel) { }
+        } message: {
+            Text("O novo idioma será usado depois que o aplicativo reiniciar.")
         }
     }
 
@@ -198,7 +280,9 @@ struct PreferencesView: View {
     }
 
     private func retentionLabel(for days: Int) -> String {
-        days == 0 ? "Nunca" : "\(days) dias"
+        guard days > 0 else { return String(localized: "Nunca") }
+        if days == 1 { return String(localized: "1 dia") }
+        return String(format: String(localized: "%d dias"), days)
     }
 }
 

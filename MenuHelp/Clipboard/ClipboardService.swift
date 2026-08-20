@@ -56,7 +56,7 @@ struct ClipboardItem: Identifiable, Codable {
     }
 
     var preview: String {
-        guard let text else { return "Imagem" }
+        guard let text else { return String(localized: "Imagem") }
 
         let maxLength = 100
         if text.count > maxLength {

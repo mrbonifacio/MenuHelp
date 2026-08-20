@@ -5,7 +5,7 @@ final class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     init() {
         let hostingController = NSHostingController(rootView: PreferencesView())
         let window = NSWindow(contentViewController: hostingController)
-        window.title = "Preferências do MenuHelp"
+        window.title = String(localized: "Preferências do MenuHelp")
         window.styleMask = [.titled, .closable, .miniaturizable]
         window.setContentSize(NSSize(width: 520, height: 590))
         window.minSize = NSSize(width: 520, height: 500)

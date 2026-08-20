@@ -40,9 +40,10 @@ class MenuBarController: ObservableObject {
 
         button.imageScaling = .scaleProportionallyDown
         button.imagePosition = .imageOnly
-        button.action = #selector(togglePopover)
+        button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        button.action = #selector(handleStatusItemClick(_:))
         button.target = self
-        button.toolTip = "MenuHelp"
+        button.toolTip = String(localized: "MenuHelp — clique para abrir; clique direito para mais opções")
 
         popover = NSPopover()
         popover?.contentSize = NSSize(width: 390, height: 560)
@@ -54,6 +55,18 @@ class MenuBarController: ObservableObject {
         clipboardHistoryWindowController = ClipboardHistoryWindowController(
             menuBarController: self
         )
+    }
+
+    @objc private func handleStatusItemClick(_ sender: NSStatusBarButton) {
+        let event = NSApp.currentEvent
+        let isContextClick = event?.type == .rightMouseUp
+            || event?.modifierFlags.contains(.control) == true
+
+        if isContextClick {
+            showStatusMenu(relativeTo: sender)
+        } else {
+            togglePopover()
+        }
     }
 
     @objc func togglePopover() {
@@ -103,9 +116,13 @@ class MenuBarController: ObservableObject {
         }
     }
 
-    func showPreferences() {
+    @objc func showPreferences() {
         popover?.performClose(nil)
         preferencesWindowController.showPreferences()
+    }
+
+    @objc private func quitApplication() {
+        NSApp.terminate(nil)
     }
 
     private func openClipboardHistory(targetApplication: NSRunningApplication?) {
@@ -135,6 +152,39 @@ class MenuBarController: ObservableObject {
             self?.configureTransparentPopoverWindow()
         }
         popover.contentViewController?.view.window?.makeKey()
+    }
+
+    private func showStatusMenu(relativeTo button: NSStatusBarButton) {
+        popover?.performClose(nil)
+
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+
+        let preferencesItem = NSMenuItem(
+            title: String(localized: "Configurações…"),
+            action: #selector(showPreferences),
+            keyEquivalent: ","
+        )
+        preferencesItem.target = self
+        preferencesItem.image = NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
+        menu.addItem(preferencesItem)
+
+        menu.addItem(.separator())
+
+        let quitItem = NSMenuItem(
+            title: String(localized: "Sair do MenuHelp"),
+            action: #selector(quitApplication),
+            keyEquivalent: "q"
+        )
+        quitItem.target = self
+        quitItem.image = NSImage(systemSymbolName: "power", accessibilityDescription: nil)
+        menu.addItem(quitItem)
+
+        menu.popUp(
+            positioning: nil,
+            at: NSPoint(x: 0, y: button.bounds.minY),
+            in: button
+        )
     }
 
     private func configureTransparentPopoverWindow() {

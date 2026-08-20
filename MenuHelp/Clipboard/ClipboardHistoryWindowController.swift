@@ -6,7 +6,7 @@ final class ClipboardHistoryWindowController: NSWindowController, NSWindowDelega
         let rootView = ClipboardHistoryWindowView(controller: menuBarController)
         let hostingController = NSHostingController(rootView: rootView)
         let window = NSWindow(contentViewController: hostingController)
-        window.title = "Histórico do Clipboard"
+        window.title = String(localized: "Histórico do Clipboard")
         window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
         window.setContentSize(NSSize(width: 520, height: 600))
         window.minSize = NSSize(width: 400, height: 420)

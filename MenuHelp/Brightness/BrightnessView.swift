@@ -91,36 +91,36 @@ struct BrightnessSection: View {
 
     private var emptyStateTitle: String {
         if brightnessService.detectedExternalDisplayCount == 0 {
-            return "Nenhum monitor externo detectado"
+            return String(localized: "Nenhum monitor externo detectado")
         }
 
         return brightnessService.detectedExternalDisplayCount == 1
-            ? "Monitor sem controle DDC/CI"
-            : "Monitores sem controle DDC/CI"
+            ? String(localized: "Monitor sem controle DDC/CI")
+            : String(localized: "Monitores sem controle DDC/CI")
     }
 
     private var emptyStateDescription: String {
         if brightnessService.detectedExternalDisplayCount == 0 {
-            return "Conecte um monitor externo compatível com DDC/CI."
+            return String(localized: "Conecte um monitor externo compatível com DDC/CI.")
         }
 
         return brightnessService.errorMessage
-            ?? "Ative o DDC/CI no monitor e confira o cabo ou adaptador."
+            ?? String(localized: "Ative o DDC/CI no monitor e confira o cabo ou adaptador.")
     }
 
     private var requiredBackendTitle: String {
 #if arch(arm64)
-        return "m1ddc não encontrado"
+        return String(localized: "m1ddc não encontrado")
 #else
-        return "ddcctl não encontrado"
+        return String(localized: "ddcctl não encontrado")
 #endif
     }
 
     private var requiredBackendDescription: String {
 #if arch(arm64)
-        return "Instale com: brew install m1ddc"
+        return String(localized: "Instale com: brew install m1ddc")
 #else
-        return "Instale com: brew install ddcctl"
+        return String(localized: "Instale com: brew install ddcctl")
 #endif
     }
 }

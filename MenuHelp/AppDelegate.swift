@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         _ = ClipboardService.shared
         _ = SystemMonitorService.shared
         _ = PreventSleepService.shared
+        _ = KeyboardCleaningService.shared
 
         // Inicializar menu bar e popover
         menuBarController.setup()

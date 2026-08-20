@@ -78,7 +78,7 @@ class ShortcutService: ObservableObject {
         )
 
         if status != noErr {
-            registrationError = "Não foi possível inicializar os atalhos do teclado."
+            registrationError = String(localized: "Não foi possível inicializar os atalhos do teclado.")
         }
     }
 
@@ -87,7 +87,7 @@ class ShortcutService: ObservableObject {
 
         guard eventHandlerRef != nil else {
             if registrationError == nil {
-                registrationError = "Não foi possível inicializar os atalhos do teclado."
+                registrationError = String(localized: "Não foi possível inicializar os atalhos do teclado.")
             }
             return
         }
@@ -111,8 +111,8 @@ class ShortcutService: ObservableObject {
         guard status == noErr else {
             hotKeyRef = nil
             registrationError = status == eventHotKeyExistsErr
-                ? "⇧⌘V já está sendo usado por outro aplicativo."
-                : "Não foi possível ativar o atalho ⇧⌘V."
+                ? String(localized: "⇧⌘V já está sendo usado por outro aplicativo.")
+                : String(localized: "Não foi possível ativar o atalho ⇧⌘V.")
             return
         }
     }
