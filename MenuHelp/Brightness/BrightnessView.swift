@@ -109,19 +109,11 @@ struct BrightnessSection: View {
     }
 
     private var requiredBackendTitle: String {
-#if arch(arm64)
-        return String(localized: "m1ddc não encontrado")
-#else
-        return String(localized: "ddcctl não encontrado")
-#endif
+        String(localized: "Controle de brilho indisponível")
     }
 
     private var requiredBackendDescription: String {
-#if arch(arm64)
-        return String(localized: "Instale com: brew install m1ddc")
-#else
-        return String(localized: "Instale com: brew install ddcctl")
-#endif
+        String(localized: "Reinstale o MenuHelp para restaurar o componente de brilho incluído no app.")
     }
 }
 

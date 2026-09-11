@@ -5,6 +5,7 @@
 DerivedData/
 build/
 .codex-build/
+com.apple.DeveloperTools/
 dist/
 *.xcuserstate
 *.xcscmblueprint

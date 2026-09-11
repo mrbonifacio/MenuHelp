@@ -37,9 +37,11 @@ não registra, transmite nem mantém um log das teclas pressionadas.
 
 ## Controle de brilho
 
-O controle de monitores externos executa `m1ddc` ou `ddcctl` somente nos caminhos
-padrão do Homebrew (`/opt/homebrew/bin` e `/usr/local/bin`). Esses programas não
-são incluídos no MenuHelp e devem ser instalados separadamente pelo usuário.
+O controle de monitores externos executa `m1ddc` (Apple Silicon) ou `ddcctl`
+(Intel) incluídos em `MenuHelp.app/Contents/Helpers`. Nenhum download ou instalação
+adicional é realizado. O app não procura ferramentas no PATH ou no Homebrew.
+Esses componentes consultam os monitores locais e enviam comandos de brilho
+DDC/CI. Fontes e licenças são fornecidas dentro do aplicativo e no repositório.
 
 ## Remoção dos dados
 

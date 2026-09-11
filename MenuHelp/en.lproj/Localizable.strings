@@ -85,10 +85,8 @@
 "Monitores sem controle DDC/CI" = "Monitors without DDC/CI control";
 "Conecte um monitor externo compatível com DDC/CI." = "Connect a DDC/CI-compatible external monitor.";
 "Ative o DDC/CI no monitor e confira o cabo ou adaptador." = "Enable DDC/CI on the monitor and check the cable or adapter.";
-"m1ddc não encontrado" = "m1ddc not found";
-"ddcctl não encontrado" = "ddcctl not found";
-"Instale com: brew install m1ddc" = "Install with: brew install m1ddc";
-"Instale com: brew install ddcctl" = "Install with: brew install ddcctl";
+"Controle de brilho indisponível" = "Brightness control unavailable";
+"Reinstale o MenuHelp para restaurar o componente de brilho incluído no app." = "Reinstall MenuHelp to restore the brightness component bundled with the app.";
 "Não foi possível identificar os monitores conectados." = "Could not identify the connected monitors.";
 "Um monitor foi detectado, mas não respondeu ao DDC/CI." = "A monitor was detected but did not respond to DDC/CI.";
 "%d monitores foram detectados, mas não responderam ao DDC/CI." = "%d monitors were detected but did not respond to DDC/CI.";

@@ -37,8 +37,10 @@ e colagem automática ficam indisponíveis.
 
 O target Release usa Hardened Runtime e mantém App Sandbox desativado. O
 sandbox não é usado porque o app precisa de event tap global e executa os
-backends DDC/CI instalados pelo Homebrew.
+backends DDC/CI incluídos no próprio aplicativo. A fase `Bundle DDC tools`
+compila as fontes de `ThirdParty/` sem rede. O sandbox de scripts do Xcode fica
+desativado no target para permitir compilar os dois helpers e seus módulos.
 
-Para uma distribuição pública, use Xcode **Product → Archive → Distribute App →
-Developer ID** e envie para notarização. Certificados, senhas e perfis nunca
-devem ser adicionados ao repositório.
+Para gerar a distribuição gratuita, use `bash Scripts/package-release.sh 0.2.0`.
+Para Developer ID/notarização opcionais, consulte [RELEASING.md](RELEASING.md).
+Certificados, senhas e perfis nunca devem ser adicionados ao repositório.

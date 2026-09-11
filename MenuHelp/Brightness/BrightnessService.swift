@@ -58,28 +58,13 @@ class BrightnessService: ObservableObject {
 
     private var backend: BrightnessBackend?
 
-    /// PATH que apps GUI normalmente não recebem do shell do usuário.
-    private static let homebrewPath = "/opt/homebrew/bin:/usr/local/bin"
-    private static let m1ddcPaths = [
-        "/opt/homebrew/bin/m1ddc",
-        "/usr/local/bin/m1ddc",
-    ]
-    private static let ddcctlPaths = [
-        "/opt/homebrew/bin/ddcctl",
-        "/usr/local/bin/ddcctl",
-    ]
-
     private init() {}
 
     func checkBackendAvailability() {
-        let m1ddcPath = locateCommand(possiblePaths: Self.m1ddcPaths)
-        let ddcctlPath = locateCommand(possiblePaths: Self.ddcctlPaths)
-
 #if arch(arm64)
-        backend = m1ddcPath.map(BrightnessBackend.m1ddc)
-            ?? ddcctlPath.map(BrightnessBackend.ddcctl)
+        backend = bundledCommand(named: "m1ddc").map(BrightnessBackend.m1ddc)
 #else
-        backend = ddcctlPath.map(BrightnessBackend.ddcctl)
+        backend = bundledCommand(named: "ddcctl").map(BrightnessBackend.ddcctl)
 #endif
 
         backendAvailable = backend != nil
@@ -320,10 +305,12 @@ class BrightnessService: ObservableObject {
         return BrightnessReading(current: current, maximum: maximum, name: name)
     }
 
-    private func locateCommand(possiblePaths: [String]) -> String? {
-        // Não busca executáveis no PATH herdado do usuário. Isso evita iniciar
-        // um binário homônimo colocado em uma pasta arbitrária.
-        return possiblePaths.first(where: fileExistsAndIsExecutable)
+    private func bundledCommand(named name: String) -> String? {
+        // Only execute the helper shipped inside this app. No PATH/Homebrew lookup.
+        let path = Bundle.main.bundleURL
+            .appendingPathComponent("Contents/Helpers", isDirectory: true)
+            .appendingPathComponent(name).path
+        return fileExistsAndIsExecutable(path) ? path : nil
     }
 
     private func fileExistsAndIsExecutable(_ path: String) -> Bool {
@@ -407,7 +394,7 @@ class BrightnessService: ObservableObject {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: path)
         process.arguments = arguments
-        process.environment = commandEnvironment
+        process.environment = ["PATH": "/usr/bin:/bin:/usr/sbin:/sbin", "LC_ALL": "C"]
 
         let pipe = Pipe()
         process.standardOutput = pipe
@@ -415,9 +402,9 @@ class BrightnessService: ObservableObject {
 
         do {
             try process.run()
-            process.waitUntilExit()
-
+            // Drain while the child runs so verbose discovery cannot fill the pipe.
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
             let output = String(data: data, encoding: .utf8) ?? ""
             return CommandResult(status: process.terminationStatus, output: output)
         } catch {
@@ -425,11 +412,6 @@ class BrightnessService: ObservableObject {
         }
     }
 
-    private var commandEnvironment: [String: String] {
-        var environment = ProcessInfo.processInfo.environment
-        environment["PATH"] = Self.homebrewPath + ":/usr/bin:/bin:/usr/sbin:/sbin"
-        return environment
-    }
 }
 
 private enum BrightnessBackend {

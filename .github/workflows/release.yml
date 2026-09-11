@@ -1,0 +1,40 @@
+name: Package release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (X.Y.Z); builds downloadable artifacts, does not publish automatically'
+        required: true
+        default: '0.2.0'
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode 26
+        run: |
+          for app in /Applications/Xcode*.app; do
+            [[ "$app" == *beta* ]] && continue
+            major=$("$app/Contents/Developer/usr/bin/xcodebuild" -version | awk '/^Xcode / {split($2, version, "."); print version[1]}')
+            if [[ "$major" -ge 26 ]]; then
+              sudo xcode-select -s "$app/Contents/Developer"
+              exit 0
+            fi
+          done
+          echo 'Xcode 26 or newer is required on this runner.' >&2
+          exit 1
+      - name: Package universal app with bundled DDC
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: bash Scripts/package-release.sh "$RELEASE_VERSION"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MenuHelp-release
+          path: dist/
+          if-no-files-found: error
