@@ -115,6 +115,12 @@ script bundles the native helpers and their source/licenses, signs ad-hoc by
 default, and verifies the bundle. Developer ID signing and notarization are
 optional. See [release instructions](RELEASING.md).
 
+## Support MenuHelp
+
+If MenuHelp makes your day easier, you can support its development with a
+[coffee](https://buymeacoffee.com/mrbonifacio). Contributions are optional;
+MenuHelp remains free and open source.
+
 ## Contributing and security
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes. Report security
