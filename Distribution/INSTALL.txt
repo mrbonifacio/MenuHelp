@@ -1,36 +1,4 @@
-MenuHelp — Português
-
-Requer macOS 15.7 ou superior. Compatível com Apple Silicon e Intel.
-Download oficial: https://github.com/mrbonifacio/MenuHelp/releases/latest
-
-1. Abra o DMG e arraste MenuHelp para Applications (Aplicativos).
-   Se você baixou o ZIP, descompacte e mova MenuHelp.app para Aplicativos.
-2. Abra MenuHelp pela pasta Aplicativos. Ele aparece na barra de menus.
-3. Na versão gratuita sem notarização, o macOS pode impedir a primeira abertura.
-   Depois de tentar abrir, vá a Ajustes do Sistema > Privacidade e Segurança >
-   Abrir Mesmo Assim e confirme, se você confia na origem do download.
-   Não é necessário desativar o Gatekeeper nem usar comandos no Terminal.
-4. Quando solicitado para colagem automática ou limpeza do teclado, autorize
-   MenuHelp em Privacidade e Segurança > Acessibilidade.
-
-Não precisa instalar Homebrew, Xcode, m1ddc, ddcctl ou Rosetta.
-Os componentes de brilho já estão incluídos. A compatibilidade depende de
-DDC/CI habilitado no monitor e do suporte do cabo, porta ou dock.
-Um monitor sem DDC/CI não passa a oferecer controle físico de brilho ao instalar
-o app. A tela interna do MacBook não é controlada por esses componentes.
-
-Atalho do histórico: Shift + Command + V.
-Idioma e início automático: Configurações na barra de menus.
-Para atualizar: encerre MenuHelp e substitua o app na pasta Aplicativos.
-Preferências e histórico permanecem no Mac. Se necessário, autorize novamente
-Acessibilidade após a atualização. Não execute diretamente de dentro do DMG.
-
-Fontes e licenças dos componentes: MenuHelp.app/Contents/Resources/Licenses
-e MenuHelp.app/Contents/Resources/ThirdPartySources.zip (Mostrar Conteúdo do Pacote).
-Privacidade: https://github.com/mrbonifacio/MenuHelp/blob/main/PRIVACY.md
-Ajuda da Apple: https://support.apple.com/102445
-
-MenuHelp — English
+MenuHelp — Installation
 
 Requires macOS 15.7 or later. Supports Apple Silicon and Intel.
 Official download: https://github.com/mrbonifacio/MenuHelp/releases/latest
@@ -59,3 +27,6 @@ Do not run the app directly inside the DMG.
 Bundled licenses and full helper sources are inside the app's Resources folder
 (Show Package Contents), under Licenses and ThirdPartySources.zip.
 Apple instructions: https://support.apple.com/102445
+
+Feature instructions: https://github.com/mrbonifacio/MenuHelp/blob/main/docs/USAGE.md
+Privacy: https://github.com/mrbonifacio/MenuHelp/blob/main/PRIVACY.md

@@ -1,10 +1,11 @@
 # macOS
 .DS_Store
 
-# Xcode: configurações locais e resultados de build
+# Xcode: local settings and build output
 DerivedData/
 build/
-.codex-build/
+/.*-build/
+Transcriptions/
 com.apple.DeveloperTools/
 dist/
 *.xcuserstate
@@ -14,7 +15,7 @@ dist/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
 
-# Arquivos de assinatura e pacotes gerados
+# Signing files and generated packages
 *.cer
 *.p12
 *.provisionprofile
@@ -25,7 +26,7 @@ dist/
 *.dmg
 *.pkg
 
-# Configurações locais e segredos
+# Local configuration and secrets
 .env
 .env.*
 !.env.example

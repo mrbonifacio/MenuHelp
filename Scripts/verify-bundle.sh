@@ -3,7 +3,9 @@ set -euo pipefail
 app="${1:?Usage: bash Scripts/verify-bundle.sh MenuHelp.app}"
 [[ -d "$app/Contents" ]] || { echo "Missing app: $app" >&2; exit 1; }
 codesign --verify --deep --strict --verbose=2 "$app"
-lipo "$app/Contents/MacOS/MenuHelp" -verify_arch arm64 x86_64
+for architecture in arm64 x86_64; do
+    lipo "$app/Contents/MacOS/MenuHelp" -verify_arch "$architecture"
+done
 lipo "$app/Contents/Helpers/m1ddc" -verify_arch arm64
 lipo "$app/Contents/Helpers/ddcctl" -verify_arch x86_64
 for binary in "$app/Contents/MacOS/MenuHelp" "$app/Contents/Helpers/m1ddc" "$app/Contents/Helpers/ddcctl"; do

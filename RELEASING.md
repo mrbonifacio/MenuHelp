@@ -1,39 +1,43 @@
-# Distribuir MenuHelp
+# Releasing MenuHelp
 
-## Pacote gratuito
+## Package the current source
 
-Em um Mac com Xcode 26+, execute na raiz do checkout:
+On a Mac with Xcode 26 or later, run from the repository root:
 
 ```sh
 bash Scripts/package-release.sh 0.2.0
 ```
 
-Isso gera em `dist/0.2.0/` um DMG com o app e atalho para Aplicativos, ZIP
-alternativo, INSTALL.txt em dois idiomas e SHA256SUMS.txt. A saída não sobrescreve
-pacotes existentes. Mova os arquivos anteriores para outro local antes de refazer
-a mesma versão. O diretório temporário de compilação é removido automaticamente.
+This packages the current checkout using the supplied version. Choose a new
+version for changes after the published 0.2.0 release. The output under
+`dist/<version>/` contains a DMG with the app and an Applications shortcut, an
+alternative ZIP, an English INSTALL.txt, and SHA256SUMS.txt. Existing packages
+are not overwritten; move them elsewhere or choose another version. Temporary
+build files are removed automatically.
 
-O MenuHelp é universal; seus helpers são nativos arm64 (m1ddc) e x86_64 (ddcctl).
-Todos usam apenas bibliotecas do macOS. A fase de build do Xcode inclui os
-helpers mesmo ao executar Command + R. Não requer Homebrew ou downloads no build.
-Para inspecionar um pacote extraído, use:
+The app is universal. The bundled helpers are native arm64 (`m1ddc`) and x86_64
+(`ddcctl`) executables using macOS libraries only. The Xcode build phase includes
+them during normal development builds as well. No Homebrew or build-time download
+is required. To inspect an extracted universal app:
 
 ```sh
-bash Scripts/verify-bundle.sh /caminho/para/MenuHelp.app
+bash Scripts/verify-bundle.sh /path/to/MenuHelp.app
 ```
 
-Essa verificação cobre arquiteturas, assinaturas, bibliotecas externas,
-localizações e fontes/licenças. Não substitui o teste do brilho em hardware
-compatível, nem comprova notarização. Teste Intel e Apple Silicon, abertura
-após download, preferências, clipboard e permissões antes de anunciar suporte.
+Verification checks architectures, signatures, external libraries, localizations,
+and bundled source/licenses. It does not prove notarization or hardware brightness
+compatibility. Before announcing support, test Intel and Apple Silicon hardware,
+first launch after download, preferences, clipboard operations, transcription,
+and permission flows.
 
-## Publicar no GitHub
+## Publish on GitHub
 
-Atualize a versão/build em `MenuHelp.xcodeproj/project.pbxproj`, revise as notas
-de release e compile. O commit publicado deve corresponder às fontes compiladas,
-incluindo `ThirdParty/` e os scripts. Não versione a pasta `dist/`.
+Update the marketing/build versions in `MenuHelp.xcodeproj/project.pbxproj` and
+prepare English release notes. Build and validate the exact commit being
+published, including ThirdParty and Scripts. Do not commit `dist/`.
 
-Exemplo para a versão 0.2.0, depois de commit/push do código:
+The following illustrates the existing 0.2.0 naming convention; use a new tag and
+version for a new release, and do not replace an existing published tag:
 
 ```sh
 git tag -a v0.2.0 -m 'MenuHelp 0.2.0'
@@ -46,37 +50,39 @@ gh release create v0.2.0 \
   --title 'MenuHelp 0.2.0' --notes-file Distribution/RELEASE-0.2.0.md
 ```
 
-O GitHub fornece os arquivos Source code referentes à tag. Eles incluem as
-fontes completas dos helpers distribuídos. Além disso, cada app carrega
-`Contents/Resources/ThirdPartySources.zip` e `Licenses/`.
-Em **Actions → Package release → Run workflow**, é possível gerar os pacotes
-sem publicá-los automaticamente. Use o commit/tag correto ao executar o workflow.
+GitHub's Source code archives correspond to the tag and include the complete
+bundled helper sources. Each app also includes
+`Contents/Resources/ThirdPartySources.zip` and `Contents/Resources/Licenses/`.
 
-## Assinatura e notarização opcionais
+**Actions → Package release → Run workflow** generates packages as downloadable
+workflow artifacts without publishing them automatically. Select the intended
+commit/tag. Publishing source on main does not update an existing release binary.
 
-Por padrão, a assinatura é ad-hoc (`-`). Ela permite verificar integridade, mas
-não comprova identidade e não evita autorização manual no Gatekeeper.
-O certificado Apple Development não substitui Developer ID para esse objetivo.
+## Optional Developer ID signing and notarization
 
-Com Developer ID Application disponível e um perfil já configurado no Keychain
-via `xcrun notarytool store-credentials`, execute:
+Signing defaults to ad-hoc (`-`), which supports integrity checks but does not
+verify the developer's identity or avoid manual Gatekeeper authorization. An Apple
+Development certificate does not replace Developer ID for distribution.
+
+With a Developer ID Application certificate and a Keychain profile configured
+using `xcrun notarytool store-credentials`, run:
 
 ```sh
-MENUHELP_SIGN_IDENTITY='Developer ID Application: NOME (TEAMID)' \
+MENUHELP_SIGN_IDENTITY='Developer ID Application: NAME (TEAMID)' \
 MENUHELP_NOTARY_PROFILE='MenuHelp-notary' \
 bash Scripts/package-release.sh 0.2.0
 ```
 
-O script assina primeiro os helpers, depois o app, submete à Apple, anexa e
-valida o ticket e só então gera os pacotes. Também notariza e valida o DMG.
-Qualquer falha interrompe o processo. Não publique artefatos parciais.
-Se notarizar uma versão futura, atualize INSTALL.txt e notas de release para
-descrever a assinatura real. Nunca adicione certificados ou credenciais ao Git.
+The script signs helpers before the app, submits it to Apple, staples and
+validates the ticket, then creates the packages. It also notarizes and validates
+the DMG. Failures stop packaging; do not publish partial artifacts. Update the
+installation guide and release notes to describe the actual signing status.
+Never add certificates or credentials to Git.
 
-## Primeira abertura
+## First launch
 
-O usuário instala apenas o MenuHelp. Builds sem notarização podem exigir
-**Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim** depois da
-primeira tentativa. Não use instruções para desativar Gatekeeper globalmente.
-Referências: [Apple Support](https://support.apple.com/102445) e
+Users install only MenuHelp. Builds without notarization may require **System
+Settings → Privacy & Security → Open Anyway** after the first launch attempt.
+Do not instruct users to disable Gatekeeper globally. See
+[Apple Support](https://support.apple.com/102445) and
 [Developer ID](https://developer.apple.com/developer-id/).

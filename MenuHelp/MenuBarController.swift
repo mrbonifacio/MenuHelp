@@ -15,6 +15,7 @@ class MenuBarController: ObservableObject {
     private var statusItem: NSStatusItem?
     private var popover: NSPopover?
     private var clipboardHistoryWindowController: ClipboardHistoryWindowController?
+    private var transcriptionWindowController: TranscriptionWindowController?
     private let preferencesWindowController = PreferencesWindowController()
     private var pasteTargetApplication: NSRunningApplication?
 
@@ -121,6 +122,14 @@ class MenuBarController: ObservableObject {
         preferencesWindowController.showPreferences()
     }
 
+    @objc func showTranscription() {
+        popover?.performClose(nil)
+        if transcriptionWindowController == nil {
+            transcriptionWindowController = TranscriptionWindowController()
+        }
+        transcriptionWindowController?.showTranscription()
+    }
+
     @objc private func quitApplication() {
         NSApp.terminate(nil)
     }
@@ -159,6 +168,17 @@ class MenuBarController: ObservableObject {
 
         let menu = NSMenu()
         menu.autoenablesItems = false
+
+        let transcriptionItem = NSMenuItem(
+            title: String(localized: "Transcrição de áudio…"),
+            action: #selector(showTranscription),
+            keyEquivalent: ""
+        )
+        transcriptionItem.target = self
+        transcriptionItem.image = NSImage(systemSymbolName: "waveform", accessibilityDescription: nil)
+        menu.addItem(transcriptionItem)
+
+        menu.addItem(.separator())
 
         let preferencesItem = NSMenuItem(
             title: String(localized: "Configurações…"),
@@ -259,9 +279,10 @@ struct MainPopoverView: View {
                 .padding(.horizontal, 14)
                 .padding(.top, 14)
 
-                DashboardView {
-                    controller.openClipboardHistoryNormally()
-                }
+                DashboardView(
+                    openClipboardHistory: controller.openClipboardHistoryNormally,
+                    openTranscription: controller.showTranscription
+                )
             }
         }
         .frame(width: 390, height: 560, alignment: .top)

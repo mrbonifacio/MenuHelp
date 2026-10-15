@@ -1,66 +1,92 @@
 # MenuHelp
 
-Utilitário open source de menu bar para macOS. O MenuHelp reúne monitoramento
-do sistema, histórico local do clipboard, limpeza do teclado, prevenção de
-repouso e controle DDC/CI de monitores externos.
+MenuHelp is an open-source macOS menu bar utility for system monitoring,
+clipboard history, keyboard cleaning, keeping your Mac awake, external display
+brightness, and local system audio transcription.
 
-> O projeto está em fase inicial (`0.2.0`). Antes de instalar uma versão
-> distribuída por terceiros, confira a assinatura e a origem do arquivo.
+## Features
 
-## Funcionalidades
+| Feature | What it does |
+| --- | --- |
+| System monitoring | Shows CPU, memory, and disk usage; can be switched on or off. |
+| Clipboard history | Stores copied text and images locally, with search and a global shortcut. |
+| Keyboard cleaning | Temporarily blocks keyboard input for 30 seconds. |
+| Prevent Sleep | Keeps the display on and prevents automatic idle sleep. |
+| External display brightness | Controls compatible DDC/CI displays using bundled native helpers. |
+| Audio transcription | Converts system playback into timestamped text and automatically saves a TXT file. |
+| Preferences | Offers English and Brazilian Portuguese, launch at login, and persistent settings. |
 
-- medidores ativáveis de CPU, RAM e armazenamento;
-- histórico de textos e imagens em uma janela separada;
-- atalho global `Shift + Command + V`, com navegação por `↑`/`↓` e `Enter`;
-- retenção configurável de 50, 100, 250 ou 500 itens;
-- exclusão automática em 7, 30 ou 90 dias, ou sem prazo;
-- limite conjunto de 200 MB para imagens;
-- bloqueio temporário do teclado por 30 segundos;
-- Prevent Sleep;
-- brilho de monitores externos com `m1ddc` ou `ddcctl` já incluídos;
-- português brasileiro e inglês, com idioma selecionável;
-- início automático com o Mac e preferências persistentes.
+The documentation describes the current source on `main`. **Audio transcription
+is available when building the current source; it is not included in the existing
+0.2.0 download.** See the [user guide](docs/USAGE.md) for every feature.
 
-## Download e instalação
+## Download and install
 
-[**Baixar MenuHelp para Mac — versão mais recente**](https://github.com/mrbonifacio/MenuHelp/releases/latest)
+[Download the latest release for Mac](https://github.com/mrbonifacio/MenuHelp/releases/latest)
 
-Baixe o arquivo `MenuHelp-0.2.0-universal.dmg`, abra e arraste **MenuHelp** para
-**Applications / Aplicativos**. Abra o app por essa pasta; o ícone aparece na
-barra de menus. O ZIP é uma alternativa ao DMG.
+1. Download the universal DMG, open it, and drag **MenuHelp** into **Applications**.
+   Alternatively, extract the ZIP and move `MenuHelp.app` into Applications.
+2. Open the app from Applications. Its icon appears in the menu bar.
+3. Click the icon to open the dashboard; right-click it for **Settings**, audio
+   transcription (current source builds), and **Quit**.
 
-O pacote contém tudo que o app precisa: **não instale Homebrew, Xcode, m1ddc,
-ddcctl ou Rosetta** para utilizá-lo. Requer macOS 15.7 ou superior.
+Requires **macOS 15.7 or later**, on Apple Silicon or Intel. The app includes its
+brightness helpers; no Homebrew, Xcode, or Rosetta installation is needed to use it.
 
-A versão gratuita é assinada ad-hoc, sem Developer ID ou notarização da Apple.
-Se o macOS impedir a primeira abertura, depois de tentar abrir o app, use
-**Ajustes do Sistema → Privacidade e Segurança → Abrir Mesmo Assim**, se você
-confia na origem do download. Siga as [instruções da Apple](https://support.apple.com/102445).
-Não é necessário desativar o Gatekeeper. Macs gerenciados podem restringir essa
-autorização. Para atualizar, encerre o app e substitua-o em Aplicativos.
+The current free release is ad-hoc signed and **not Apple-notarized**. If macOS
+blocks the first launch, attempt to open it, then use **System Settings → Privacy
+& Security → Open Anyway** if you trust the download source. See
+[Apple's instructions](https://support.apple.com/102445). Managed Macs may restrict
+this option. You do not need to disable Gatekeeper.
 
-English: download the universal DMG, drag MenuHelp into Applications and open it.
-This free build is not notarized; after a blocked first launch use **System
-Settings → Privacy & Security → Open Anyway**, if you trust the source.
-No extra software is required. See [installation instructions](Distribution/INSTALL.txt).
+To update, quit MenuHelp and replace the app in Applications. Local history and
+preferences are kept. See [installation instructions](Distribution/INSTALL.txt).
 
-## Requisitos
+## Quick start
 
-- macOS 15.7 ou superior;
-- Xcode 26 ou superior para compilar;
-- monitor externo e conexão compatíveis com DDC/CI para brilho externo;
-- permissão de Acessibilidade para limpeza do teclado e colagem automática.
+- Turn on **System Monitoring** in the dashboard to view CPU, memory, and disk.
+- Enable **Clipboard History**, copy some text, then press **Shift + Command + V**.
+  Search, navigate with **↑ / ↓**, and press **Enter** to paste the selected item.
+- Enable **Keyboard Cleaning** to block keyboard input for 30 seconds.
+- Enable **Prevent Sleep** to keep the Mac and display awake during inactivity.
+- Use the brightness slider for each compatible external display.
+- In a current source build, open **Audio Transcription**, select the spoken
+  language, click **Start Transcription**, then play audio on the Mac. Click
+  **Stop and Save** when finished.
+- Open **Settings** to configure history retention, shortcuts, language, and
+  launch at login. Restart the app after changing its language.
 
-## Como compilar
+See the [complete user guide and troubleshooting](docs/USAGE.md).
 
-1. Clone o repositório.
-2. Abra `MenuHelp.xcodeproj` no Xcode.
-3. Selecione seu Mac como destino.
-4. Compile e execute com `Command + R`.
+## Permissions and privacy
 
-Também é possível verificar o build sem assinatura:
+| Permission | Purpose |
+| --- | --- |
+| Accessibility | Keyboard cleaning and automatic pasting from clipboard history. |
+| Screen & System Audio Recording | Capturing system playback for transcription. |
+| Speech Recognition | Recognizing speech locally on this Mac. |
 
-```bash
+MenuHelp has no accounts, telemetry, or content uploads. Clipboard data is stored
+under `~/Library/Application Support/MenuHelp/`. Transcripts are saved under
+`~/Documents/MenuHelp/Transcriptions/`. These files have no application-level
+encryption. macOS may download a local speech model before first use; audio and
+transcripts are processed on the device. The microphone is excluded, and no audio
+or video recording files are created. See the [privacy policy](PRIVACY.md).
+
+## Build from source
+
+Requires a Mac with **Xcode 26 or later** and the macOS SDK it includes.
+
+```sh
+git clone https://github.com/mrbonifacio/MenuHelp.git
+cd MenuHelp
+open MenuHelp.xcodeproj
+```
+
+Select the **MenuHelp** target and **My Mac**, then run with **Command + R**.
+To build without signing:
+
+```sh
 xcodebuild \
   -project MenuHelp.xcodeproj \
   -target MenuHelp \
@@ -69,55 +95,34 @@ xcodebuild \
   build
 ```
 
-## Brilho externo
+Xcode compiles the bundled helpers from pinned [third-party sources](ThirdParty/README.md)
+without downloads: `m1ddc` for Apple Silicon and `ddcctl` for Intel. DDC/CI must be
+enabled on the display, and the cable, adapter, or dock must support it.
 
-Os executáveis nativos são compilados automaticamente pelo Xcode a partir de
-fontes fixadas em [ThirdParty](ThirdParty/README.md): `m1ddc` para Apple Silicon e
-`ddcctl` para Intel. O app executa somente os helpers dentro de seu próprio pacote.
+See [development setup and validation](SETUP.md) for the architecture, tests, and
+manual checks.
 
-O monitor precisa oferecer DDC/CI e essa opção deve estar habilitada em seu
-menu. Alguns docks, cabos e adaptadores não encaminham comandos DDC/CI.
+## Package a release
 
-## Privacidade e permissões
-
-O MenuHelp não faz chamadas de rede e não possui telemetria. O histórico fica
-somente em `~/Library/Application Support/MenuHelp/`, com acesso restrito ao
-usuário atual. Ele pode ser pausado no painel e apagado nas Preferências ou na
-janela do histórico.
-
-O conteúdo é salvo como JSON e PNG, sem criptografia própria. Itens marcados
-como confidenciais ou transitórios por aplicativos compatíveis são ignorados.
-Consulte [PRIVACY.md](PRIVACY.md) para os detalhes e limitações.
-
-Acessibilidade é usada para bloquear o teclado durante a limpeza e simular
-`Command + V` após a seleção de um item. O app não mantém log das teclas.
-
-## Distribuição
-
-Gere gratuitamente o DMG, ZIP e checksums com:
-
-```bash
+```sh
 bash Scripts/package-release.sh 0.2.0
 ```
 
-Os arquivos ficam em `dist/0.2.0/`. O script compila Intel + Apple Silicon,
-inclui os dois helpers e suas fontes/licenças, assina ad-hoc e verifica o pacote.
-A assinatura ad-hoc não identifica o desenvolvedor perante o Gatekeeper.
-O workflow **Package release** também gera esses arquivos como artifacts.
+This example packages the current checkout; it does not reproduce the published
+0.2.0 tag. Choose a new version before publishing changed code. Output goes to
+`dist/<version>/`: a universal DMG, ZIP, installation guide, and checksums. The
+script bundles the native helpers and their source/licenses, signs ad-hoc by
+default, and verifies the bundle. Developer ID signing and notarization are
+optional. See [release instructions](RELEASING.md).
 
-O script suporta Developer ID e notarização opcionais quando houver certificado
-e credenciais. Consulte [RELEASING.md](RELEASING.md). A distribuição é pelo GitHub
-Releases, sem necessidade de Mac App Store.
+## Contributing and security
 
-## Contribuição e segurança
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes. Report security
+vulnerabilities privately using the process in [SECURITY.md](SECURITY.md).
 
-Leia [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir um pull request. Não
-publique vulnerabilidades em issues; use o processo descrito em
-[SECURITY.md](SECURITY.md).
+## License
 
-## Licença
-
-O código do MenuHelp está sob [MIT](LICENSE). Os componentes distribuídos junto
-mantêm suas próprias licenças: m1ddc (MIT) e o executável separado ddcctl (GPL-3.0).
-Fontes completas, instruções de compilação e avisos estão em
-[ThirdParty](ThirdParty/README.md) e dentro do app.
+MenuHelp is licensed under [MIT](LICENSE). Bundled components retain their own
+licenses: m1ddc (MIT) and the separate ddcctl executable (GPL-3.0). Complete helper
+sources, build instructions, and notices are included in [ThirdParty](ThirdParty/README.md)
+and in the distributed app.

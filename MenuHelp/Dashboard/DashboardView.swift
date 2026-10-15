@@ -5,8 +5,10 @@ struct DashboardView: View {
     @StateObject private var clipboardService = ClipboardService.shared
     @StateObject private var keyboardCleaning = KeyboardCleaningService.shared
     @StateObject private var preventSleep = PreventSleepService.shared
+    @ObservedObject private var transcriptionService = TranscriptionService.shared
 
     let openClipboardHistory: () -> Void
+    let openTranscription: () -> Void
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -95,12 +97,74 @@ struct DashboardView: View {
                 }
                 .shadow(color: .black.opacity(0.12), radius: 8, y: 3)
 
+                transcriptionCard
+
                 BrightnessSection()
             }
             .padding(.horizontal, 14)
             .padding(.bottom, 14)
         }
         .animation(.easeInOut(duration: 0.2), value: systemMonitor.isEnabled)
+    }
+
+    private var transcriptionCard: some View {
+        Button(action: openTranscription) {
+            HStack(spacing: 11) {
+                Image(systemName: "waveform")
+                    .font(.system(size: 20))
+                    .foregroundColor(.accentColor)
+                    .frame(width: 36, height: 36)
+                    .background(Color.accentColor.opacity(0.1))
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 3) {
+                    HStack(spacing: 6) {
+                        Text("Transcrição de áudio")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+
+                        if transcriptionService.isRecording {
+                            Circle()
+                                .fill(Color.red)
+                                .frame(width: 6, height: 6)
+                                .accessibilityHidden(true)
+                        }
+                    }
+                    Text(transcriptionSubtitle)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .background(
+            .regularMaterial,
+            in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+        )
+        .overlay {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(Color.primary.opacity(0.08), lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(0.12), radius: 8, y: 3)
+        .help("Abrir transcrição de áudio do computador")
+    }
+
+    private var transcriptionSubtitle: String {
+        if transcriptionService.isRecording {
+            return String(localized: "Transcrevendo agora · clique para acompanhar")
+        }
+        if transcriptionService.isBusy {
+            return String(localized: "Transcrição em andamento · clique para abrir")
+        }
+        return String(localized: "Áudio do computador em texto, salvo como TXT")
     }
 
     private var keyboardSubtitle: String {

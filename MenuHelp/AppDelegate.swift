@@ -27,4 +27,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menuBarController?.openClipboardHistoryFromShortcut()
         }
     }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        let transcription = TranscriptionService.shared
+        guard transcription.isBusy || transcription.hasUnsavedChanges else { return .terminateNow }
+        Task { @MainActor in
+            let saved = await transcription.finishBeforeTermination()
+            if !saved { menuBarController.showTranscription() }
+            sender.reply(toApplicationShouldTerminate: saved)
+        }
+        return .terminateLater
+    }
 }

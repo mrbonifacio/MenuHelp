@@ -1,0 +1,2 @@
+"NSScreenCaptureUsageDescription" = "O MenuHelp captura o áudio do sistema para transcrever o som dos aplicativos e salvá-lo em um arquivo de texto local.";
+"NSSpeechRecognitionUsageDescription" = "O MenuHelp usa reconhecimento de fala no próprio Mac para transcrever o áudio do sistema e salvá-lo em um arquivo de texto.";

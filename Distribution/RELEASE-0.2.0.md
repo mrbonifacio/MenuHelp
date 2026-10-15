@@ -1,54 +1,47 @@
-MenuHelp 0.2.0 — instalação em um único aplicativo / single-app installation
+# MenuHelp 0.2.0 — single-app installation
 
-## Download e instalação
+## Download and install
 
-Baixe **MenuHelp-0.2.0-universal.dmg**, abra e arraste MenuHelp para Applications.
-Alternativa: descompacte o ZIP e mova o app para Aplicativos.
-Requer **macOS 15.7 ou superior**, em Apple Silicon ou Intel.
+Download **MenuHelp-0.2.0-universal.dmg**, open it, and drag MenuHelp into
+Applications. Alternatively, extract the ZIP and move the app into Applications.
+Requires **macOS 15.7 or later**, on Apple Silicon or Intel.
 
-Esta versão usa assinatura ad-hoc e **não é notarizada pela Apple**. Na primeira
-abertura, após tentar abrir o app, use **Ajustes do Sistema → Privacidade e
-Segurança → Abrir Mesmo Assim**, se você confia na origem do download.
-[Instruções oficiais da Apple](https://support.apple.com/102445).
-Não é necessário desativar o Gatekeeper nem instalar ferramentas extras.
+This release is ad-hoc signed and **not Apple-notarized**. If the first launch is
+blocked, attempt to open the app, then use **System Settings → Privacy & Security
+→ Open Anyway** if you trust the download source. See
+[Apple's instructions](https://support.apple.com/102445). You do not need to
+disable Gatekeeper or install extra tools.
 
-## Novidades
+## Changes in this release
 
-- Controle DDC/CI incluído: m1ddc nativo em Apple Silicon e ddcctl nativo em Intel.
-- Homebrew, Xcode e Rosetta não são necessários para utilizar o app.
-- Português brasileiro e inglês, com seleção nas configurações.
-- Iniciar com o Mac e persistência das opções.
-- Prevent Sleep mantém o sistema e a tela ativos durante inatividade.
-- Menu do ícone com acesso às configurações e encerramento do app.
+- Bundled DDC/CI control: native m1ddc on Apple Silicon and ddcctl on Intel.
+- No Homebrew, Xcode, or Rosetta installation required to use the app.
+- English and Brazilian Portuguese with a language selector in Settings.
+- Launch at login and persistent preferences.
+- Prevent Sleep keeps the system and display awake during inactivity.
+- Menu bar context menu with Settings and Quit actions.
 
-O brilho depende de suporte DDC/CI no monitor, porta, cabo e dock; não há
-garantia de compatibilidade com todos os monitores. Acessibilidade é necessária
-para colagem automática e limpeza do teclado. O aplicativo funciona localmente,
-sem telemetria. O histórico pode conter dados sensíveis e não tem criptografia
-própria: consulte a política de privacidade no repositório.
+The app also provides system monitoring, local clipboard history with
+Shift + Command + V, and 30-second keyboard cleaning. Audio transcription was
+added after this release and is not included in its binaries.
 
-Validação desta versão: build universal, integridade do DMG, assinaturas ad-hoc,
-ausência de bibliotecas externas e leitura de brilho do AOC 27G4 em Apple Silicon
-usando somente o helper incluído. A execução em um Mac Intel e a primeira abertura
-em outro Mac com Gatekeeper ainda precisam de validação em hardware independente.
+Hardware brightness requires a compatible DDC/CI monitor and connection, including
+the port, cable, and dock. Accessibility is required for automatic pasting and
+keyboard cleaning. The app operates locally without telemetry. Clipboard history
+can contain sensitive data and has no application-level encryption; see the
+[privacy policy](https://github.com/mrbonifacio/MenuHelp/blob/main/PRIVACY.md).
 
-## English
+Validation recorded for this release: universal build, DMG integrity, ad-hoc
+signatures, absence of external libraries, and brightness reads from an AOC 27G4
+on Apple Silicon using only the bundled helper. Execution on Intel and first
+launch on another Mac with Gatekeeper still require independent hardware testing.
 
-Download the universal DMG, open it, and drag MenuHelp to Applications.
-Requires macOS 15.7+. Brightness helpers are included for Apple Silicon and Intel;
-no Homebrew, Xcode or Rosetta is needed. This build is ad-hoc signed and **not
-Apple-notarized**. After the first blocked launch, use **System Settings → Privacy
-& Security → Open Anyway** if you trust the download source.
-Hardware brightness requires a compatible DDC/CI monitor and connection.
+## Sources, licenses, and verification
 
-## Fontes, licenças e verificação / Sources, licenses and verification
+`SHA256SUMS.txt` contains download checksums. The release's **Source code** archive
+contains complete corresponding MenuHelp and helper sources, including ThirdParty
+and Scripts. Helper sources, licenses, and the build script also ship inside the
+app under `Contents/Resources/ThirdPartySources.zip` and
+`Contents/Resources/Licenses/`.
 
-`SHA256SUMS.txt` contém os hashes dos downloads. Fontes completas do MenuHelp e
-dos helpers estão no arquivo **Source code** desta mesma versão. As fontes dos
-helpers, licenças e script de build também estão incluídos dentro do próprio app
-em `Contents/Resources/ThirdPartySources.zip` e `Contents/Resources/Licenses`.
-MenuHelp e m1ddc: MIT. O programa separado ddcctl: GPL-3.0.
-
-Checksums are provided in `SHA256SUMS.txt`. Complete corresponding source is
-available in this release's **Source code** archive, including `ThirdParty/` and
-`Scripts/`. The app also ships the helper sources, build script and licenses.
+MenuHelp and m1ddc are MIT-licensed. The separate ddcctl executable is GPL-3.0.

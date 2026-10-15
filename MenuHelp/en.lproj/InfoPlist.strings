@@ -1,0 +1,2 @@
+"NSScreenCaptureUsageDescription" = "MenuHelp captures system audio to transcribe sound from apps and save it as a local text file.";
+"NSSpeechRecognitionUsageDescription" = "MenuHelp uses on-device speech recognition to transcribe system audio and save it as a text file.";

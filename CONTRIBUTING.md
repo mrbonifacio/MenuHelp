@@ -1,33 +1,36 @@
-# Como contribuir
+# Contributing to MenuHelp
 
-Obrigado por ajudar o MenuHelp.
+Thank you for helping improve MenuHelp.
 
-## Preparação
+## Get started
 
-1. Faça um fork e crie uma branch curta para a mudança.
-2. Abra `MenuHelp.xcodeproj` usando a versão de Xcode indicada no README.
-3. Compile localmente sem adicionar seu `xcuserdata`, certificados ou Team ID.
-4. Mantenha cada pull request focado em um único problema.
+1. Fork the repository and create a short-lived branch for your change.
+2. Follow [SETUP.md](SETUP.md) using Xcode 26 or later.
+3. Build locally without committing user settings, certificates, or a Team ID.
+4. Keep each pull request focused on one problem and describe the resulting behavior.
 
-## Antes de enviar
+## Before submitting
 
-Execute:
+Run the unsigned Debug build described in SETUP.md. For transcription changes,
+also run:
 
-```bash
-xcodebuild \
-  -project MenuHelp.xcodeproj \
-  -target MenuHelp \
-  -configuration Debug \
-  CODE_SIGNING_ALLOWED=NO \
-  build
+```sh
+bash Scripts/test-transcription-storage.sh
+bash Scripts/test-transcription-engine.sh
 ```
 
-Confirme também que:
+Complete the manual checks relevant to your change. Confirm that:
 
-- não existem tokens, certificados, dados de clipboard ou caminhos pessoais;
-- novas permissões possuem justificativa visível para o usuário;
-- mudanças no clipboard respeitam conteúdo confidencial e transitório;
-- processos externos usam argumentos separados, nunca comandos montados para shell;
-- o README e `PRIVACY.md` continuam descrevendo o comportamento real.
+- No tokens, certificates, clipboard contents, transcripts, or personal paths are included.
+- New permissions have a clear explanation visible to the user.
+- Clipboard changes respect confidential and transient content markers.
+- External processes receive separate arguments instead of constructed shell commands.
+- README, the user guide, and PRIVACY.md describe the actual behavior.
+- New user-facing strings are localized in English and Brazilian Portuguese.
+- Project documentation and pull request descriptions are written in English.
 
-Falhas de segurança devem seguir `SECURITY.md`, não uma issue pública.
+Include relevant build/test results and any hardware or permission checks you
+could not perform. Preserve third-party source and license notices.
+
+Report vulnerabilities privately according to [SECURITY.md](SECURITY.md), rather
+than opening a public issue with sensitive details.
